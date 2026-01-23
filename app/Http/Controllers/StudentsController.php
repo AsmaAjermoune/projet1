@@ -14,7 +14,8 @@ class StudentsController extends Controller
     public function index()
     {
        $students = students::all();
-        return view('students.index', compact('students'));
+       $data = json_encode($students);
+        return view('students.index', compact('data'));
     }
 
     /**
@@ -32,8 +33,13 @@ class StudentsController extends Controller
     {
         $request->validate([
             'nom'=>'required',
+            'file'=>'required|image'
         ]);
-        students::create($request->all());
+        $path = $request->file("file")->store('students','public');
+        students::create([
+            'nom'=>$request->nom,
+            'file'=>$path,
+            ]);
         return redirect()->route('students.index')->with('success','Student added successfully');
     }
 
@@ -74,4 +80,6 @@ class StudentsController extends Controller
         $student->delete();
         return redirect()->route('students.index')->with('success','Student deleted successfully');
     }
+
+   
 }

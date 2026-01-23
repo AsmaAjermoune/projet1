@@ -7,60 +7,44 @@
   <div class="alert alert-success">{{ session('success') }}</div>
   @endif
 
-  <table class="table table-bordered" id ="example">
-    <tr>
-      <th>ID</th><th>Name</th><th>Actions</th>
-    </tr>
-    @foreach($students as $s)
-    <tr>
-      <td>{{ $s->id }}</td>
-      <td>{{ $s->nom }}</td>
-      <td>
-        <a class="btn btn-warning" href="{{ route('students.edit',$s->id) }}">Edit</a>
-        <form action="{{ route('students.destroy',$s->id) }}" method="POST" style="display:inline" class="delete-form">
-           @csrf @method('DELETE')
-           <button class="btn btn-danger">Delete</button>
-        </form>
-      </td>
-    </tr>
-    @endforeach
-  </table>
-</div>
+  <table class="table table-bordered" >
+    <thead>g
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+    </thead>
+  
+    <tbody id="studentsTable">
+
+    </tbody>
+    
+ </table>
+
 <script>
-//   $(document).ready(function() {
-//   $('#example').DataTable({
-//   "columns":[
-//     {"data":"id"},
-//     {"data":"nom"},
-//   ]
-// });
-// });
-
-// $(document).ready(function() {
-//   $('#example').DataTable();
-// });
-$('#example').DataTable({
-    columnDefs: [
-        { orderable: false, targets: 2 } // colonne 2 = Actions
-    ]
-});
-
-$('.delete-form').on('submit', function(e) {
-    e.preventDefault();
-    const form = this;
-
-    Swal.fire({
-        title: "Supprimer ?",
-        text: "Voulez-vous vraiment supprimer cet étudiant ?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Oui, supprimer",
-        cancelButtonText: "Annuler"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            form.submit();
-        }
-    });
-});
-</script>
-@endsection
+        const tbody = document.getElementById('studentsTable');
+        const students =JSON.parse( @json($data));
+        console.log(students);
+        students.forEach(elem => {
+          const tr = document.createElement('tr')
+          tr.innerHTML =`
+              <td>${elem.id}</td>
+              <td>${elem.nom }</td>
+              <td><img src="/storage/${elem.file}" height="50px"/>
+                <a href="/storage/${elem.file}"  height="50px" class="btn btn-primary" download>download</a>
+              </td>
+      
+              <td>
+                <a class="btn btn-warning btn-sm" href="/students/${elem.id}/edit">Edit</a>
+                <form action="/students/${elem.id}" method="POST" style="display:inline">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+          `
+          tbody.appendChild(tr)
+        })
+    </script>
