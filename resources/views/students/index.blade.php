@@ -7,8 +7,15 @@
   <div class="alert alert-success">{{ session('success') }}</div>
   @endif
 
+  @auth
+    bonjour, {{auth()->user()->name}}
+  @endauth
+  
+  @guest
+    <a href='/signup' >creer howa lowl lcompte</a>
+  @endguest
   <table class="table table-bordered" >
-    <thead>g
+    <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
