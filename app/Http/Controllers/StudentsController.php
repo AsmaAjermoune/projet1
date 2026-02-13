@@ -4,31 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\students;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 // use App\Http\Requests\UpdatestudentsRequest;
 
 class StudentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
-       $students = students::all();
+    //    $students = students::all();
+       $students = DB::table('students')->get();
        $data = json_encode($students);
-        return view('students.index', compact('data'));
+       return view('students.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         return view('students.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -36,48 +32,46 @@ class StudentsController extends Controller
             'file'=>'required|image'
         ]);
         $path = $request->file("file")->store('students','public');
-        students::create([
-            'nom'=>$request->nom,
-            'file'=>$path,
-            ]);
+        // students::create([
+        //     'nom'=>$request->nom,
+        //     'file'=>$path,
+        //     ]);
+        DB::table('students')->insert([
+              'nom'=>$request->nom,
+              'file'=>$path,
+        ]);
         return redirect()->route('students.index')->with('success','Student added successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(students $student)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(students $student)
     {
         return view('students.edit', compact('student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function update(Request $request, students $student)
     {
         $request->validate([
             'nom'=>'required',
         ]);
 
-        $student->update($request->all());
+        // $student->update($request->all());
+
+        DB::table('students')->where('id',$student->id)->update(['nom'=>$request->nom]);
         return redirect()->route('students.index')->with('success','Student updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+  
     public function destroy(students $student)
     {
-        $student->delete();
+        // $student->delete();
+        DB::table('students')->where('id',$student->id)->delete();
         return redirect()->route('students.index')->with('success','Student deleted successfully');
     }
 
