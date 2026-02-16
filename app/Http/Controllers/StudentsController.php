@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\students;
+use App\Models\gestionStagiaire;
+use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 // use App\Http\Requests\UpdatestudentsRequest;
@@ -21,7 +23,10 @@ class StudentsController extends Controller
     
     public function create()
     {
-        return view('students.create');
+        $gestionnaires = gestionStagiaire::all();
+        $modules = Module::all();
+
+        return view('students.create', compact('gestionnaires', 'modules'));
     }
 
     

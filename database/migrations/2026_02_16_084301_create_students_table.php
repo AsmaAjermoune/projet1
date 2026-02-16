@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('file');
+            $table->unsignedBigInteger('gestion_stagiaire_id');
+            $table->foreign('gestion_stagiaire_id')->references('id')->on('gestion_stagiaires')->onDelete('cascade');
             $table->timestamps();
         });
     }

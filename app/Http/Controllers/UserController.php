@@ -14,6 +14,10 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function test(){
+        User::factory()->count(10)->create();
+        return '10 users';
+    }
     public function register(StoreUserRequest $request)
     {
         
@@ -36,7 +40,8 @@ class UserController extends Controller
     }
 
     public function afficher_login()
-    {   $admin = User::where('role','superAdmin')->exists();
+    {   
+        $admin = User::where('role','superAdmin')->exists();
         if(!$admin){
             DB::table('users')->insert([
               'name'=>'Asma',
